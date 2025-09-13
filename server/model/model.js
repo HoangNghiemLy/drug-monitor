@@ -20,8 +20,8 @@ let schema = new mongoose.Schema({
     },
     perDay : {
         type: Number,
-        required: true,
-        unique: true
+        required: true
+        // Removed unique constraint which was likely causing issues
     },
 })
 

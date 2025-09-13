@@ -5,7 +5,10 @@ let Drugdb = require('../model/model');
 exports.create = (req,res)=>{
     // validate incoming request
     if(!req.body){// if content of request (form data) is empty
-        res.status(400).send({ message : "Content cannot be emtpy!"});// respond with this
+        res.status(400).send({ 
+            message: "Content cannot be empty!",
+            success: false
+        });
         return;
     }
 
@@ -26,8 +29,22 @@ exports.create = (req,res)=>{
             res.redirect('/manage');
         })
         .catch(err =>{
+            // Handle validation errors from MongoDB
+            if (err.name === 'ValidationError') {
+                let errors = [];
+                for (let field in err.errors) {
+                    errors.push(err.errors[field].message);
+                }
+                return res.status(400).send({
+                    message: "Validation error",
+                    errors: errors,
+                    success: false
+                });
+            }
+            
             res.status(500).send({//catch error
-                message : err.message || "There was an error while adding the drug"
+                message : err.message || "There was an error while adding the drug",
+                success: false
             });
         });
 

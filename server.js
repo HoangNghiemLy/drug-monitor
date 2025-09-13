@@ -21,6 +21,12 @@ connectMongo();
 //load the routes
 app.use('/',require('./server/routes/routes'));//Pulls the routes file whenever this is loaded
 
+// Import error handling middleware
+const { notFound, errorHandler } = require('./server/middleware/error');
+
+// Use error handling middleware (must be after routes)
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, function() {//specifies port to listen on
 	console.log('listening on '+ PORT);
